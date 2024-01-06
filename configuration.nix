@@ -25,7 +25,16 @@
     options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
   '';
   security.polkit.enable = true;
-
+  
+  # may fix driver problems
+  hardware.opengl = {
+  ## radv: an open-source Vulkan driver from freedesktop
+  driSupport = true;
+  driSupport32Bit = true;
+  ## amdvlk: an open-source Vulkan driver from AMD
+  extraPackages = [ pkgs.amdvlk ];
+  extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
+  };
 
   networking.hostName = "kone"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -125,6 +134,12 @@
   obs-studio
   easyeffects
   signal-desktop
+  protonup-qt
+  lutris
+  bottles
+  gnome3.adwaita-icon-theme
+  lm_sensors
+  radeontop
   ];
 
   programs.steam = {
