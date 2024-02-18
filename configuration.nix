@@ -106,10 +106,10 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.topi = {
     isNormalUser = true;
-    description = "Topi Autio";
+    description = "Topi";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-      firefox
+    #  firefox
     #  thunderbird
     ];
   };
@@ -122,6 +122,8 @@
   environment.systemPackages = with pkgs; [
   vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   wget
+  firefox
+  brave
   git
   discord
   btop
