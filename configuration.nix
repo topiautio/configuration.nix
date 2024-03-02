@@ -39,10 +39,6 @@
   networking.hostName = "kone"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -64,24 +60,39 @@
     LC_TIME = "fi_FI.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-
-  # Configure keymap in X11
-  services.xserver = {
+  
+  services.xserver = { 
+    # Enable the X11 windowing system.
+    enable = true;
+    # Configure keymap in X11
     layout = "fi";
     xkbVariant = "";
+    # Enable the GNOME Desktop Environment.
+    displayManager.gdm.enable = true;
+    desktopManager.gnome.enable = true;
+    # Enable DWM Window Manager
+    windowManager.dwm.enable = true;
+    # Enable touchpad support (enabled default in most desktopManager).
+    # libinput.enable = true;
   };
+  
+  # DWM patches
+  services.xserver.windowManager.dwm.package = pkgs.dwm.override {
+  patches = [
+    (pkgs.fetchpatch {
+      url = "https://dwm.suckless.org/patches/systray/dwm-systray-6.4.diff";
+      hash = "sha256-TXErH76w403T9tSJYu3tAJrQX3Y3lKSulKH0UdQLG/g=";
+    })
+    (pkgs.fetchpatch {
+      url = "https://raw.githubusercontent.com/ashish-yadav11/dwmblocks/master/patches/dwm-systray-dwmblocks-6.4.diff";
+      hash = "sha256-n36SJHX03Px6DLnYl4oAps9vqx05NWl2iAXyqaNSfiI=";
+    })
+  ];
+};
+
 
   # Configure console keymap
   console.keyMap = "fi";
-
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -92,16 +103,10 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.topi = {
@@ -109,8 +114,6 @@
     description = "Topi";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-    #  firefox
-    #  thunderbird
     ];
   };
 
@@ -120,7 +123,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+  vim
   wget
   firefox
   brave
@@ -142,6 +145,24 @@
   gnome3.adwaita-icon-theme
   lm_sensors
   radeontop
+  telegram-desktop
+  dmenu
+  st
+  prismlauncher
+  jdk
+  dwmblocks
+  (st.overrideAttrs (oldAttrs: rec {
+    patches = [
+      (fetchpatch {
+        url = "https://st.suckless.org/patches/scrollback/st-scrollback-0.8.5.diff";
+        sha256 = "sha256-ZZAbrWyIaYRtw+nqvXKw8eXRWf0beGNJgoupRKsr2lc=";
+      })
+      #(fetchpatch {
+      #  url = "https://raw.githubusercontent.com/fooUser/barRepo/1111111/somepatch.diff";
+      #  sha256 = "222222222222222222222222222222222222222222";
+      #})
+    ];
+   }))
   ];
 
   programs.steam = {
@@ -158,26 +179,6 @@
       automount_opts = "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s";
     in ["${automount_opts},credentials=/etc/nixos/smb-secrets"];
   };
-
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
