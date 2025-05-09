@@ -18,7 +18,7 @@
         ./nixos/configuration.nix        # your system module
         home-manager.nixosModules.home-manager
         {
-          home-manager.useGlobalPkgs    = true;  # reuse system pkgs
+          home-manager.useGlobalPkgs = true;  # reuse system pkgs
           home-manager.users.topi = import ./home.nix;
         }
       ];
