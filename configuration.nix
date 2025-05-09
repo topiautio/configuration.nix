@@ -22,7 +22,7 @@
     isNormalUser = true;
     description  = "Topi";
     extraGroups  = [ "wheel" "networkmanager" ];   # sudo + nmcli
-    hashedPassword = "$$6$zZUIDTir1fhMbAZG$iUzDUV03./jyA/WwZI8hi4xuq4ZuBxp30Xptr1eycuNI8dt8TV1z0Eyl8Pdy0zHOM29mcn/2oE.tIIfx4GnW30";
+    hashedPassword = "$6$zZUIDTir1fhMbAZG$iUzDUV03./jyA/WwZI8hi4xuq4ZuBxp30Xptr1eycuNI8dt8TV1z0Eyl8Pdy0zHOM29mcn/2oE.tIIfx4GnW30";
   };
 
   #  OpenSSH server 
